@@ -247,3 +247,73 @@ def CMY2RGB(image):
             new_image[i, j, 1] = 255 - image[i, j, 1]
             new_image[i, j, 2] = 255 - image[i, j, 2]
     return new_image
+
+def RGB2HSI(image):
+    # get image shape
+    height, width, channel = image.shape
+    # create new image
+    new_image = np.zeros((height, width, channel), dtype=np.uint8)
+    # convert rgb to hsi
+    for i in range(height):
+        for j in range(width):
+            # get rgb value
+            r = image[i, j, 0]
+            g = image[i, j, 1]
+            b = image[i, j, 2]
+            # convert rgb to hsi
+            a = np.arccos((0.5 * ((r - g) + (r - b))) / np.sqrt((r - g)**2 + (r - b) * (g - b)))
+
+            if g >= b:
+                h = a
+            else:
+                h = 2 * np.pi - a
+            
+            s = 1 - (3 * (min(r, g, b) / (r + g + b)))
+
+            intensity = (r + g + b) / 3
+
+            # assign hsi value to new image
+            new_image[i, j, 0] = h
+            new_image[i, j, 1] = s
+            new_image[i, j, 2] = intensity
+
+    return new_image
+
+def RGB2HSV(image):
+    # get image shape
+    height, width, channel = image.shape
+    # create new image
+    new_image = np.zeros((height, width, channel), dtype=np.uint8)
+    # convert rgb to hsv
+    for i in range(height):
+        for j in range(width):
+            # get rgb value
+            r = image[i, j, 0]
+            g = image[i, j, 1]
+            b = image[i, j, 2]
+    
+            cmax = max(r, g, b)
+            cmin = min(r, g, b)
+
+            v = cmax
+            vm = v - cmin
+
+            if v == 0:
+                s = 0
+            else:
+                s = vm / v
+            
+            if s == 0:
+                h = 0
+            elif cmax == r:
+                h = 60 * (((g - b) / vm) % 6)
+            elif cmax == g:
+                h = 60 * (((b - r) / vm) + 2)
+            elif cmax == b:
+                h = 60 * (((r - g) / vm) + 4)
+           
+            # assign hsv value to new image
+            new_image[i, j, 0] = h
+            new_image[i, j, 1] = s
+            new_image[i, j, 2] = v
+    return new_image

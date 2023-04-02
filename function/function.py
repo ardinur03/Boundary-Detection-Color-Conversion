@@ -84,3 +84,33 @@ def RGB2LUV(I):
     ILuv[:,:,2] = Iv
 
     return ILuv
+
+
+def RGB2YCbCr(I):
+    Ir = I[:,:,0]
+    Ig = I[:,:,1]
+    Ib = I[:,:,2]
+    [m,n] = np.shape(Ir)
+
+    k = [0,128,128]
+    T = [[0.299, 0.587, 0.114],[-0.168, -0.331, 0.500],[0.500, -0.419, -0.081]]
+
+    Iy = np.zeros((m, n), dtype=np.uint8)
+    Icb = np.zeros((m, n), dtype=np.uint8)
+    Icr = np.zeros((m, n), dtype=np.uint8)
+
+    for i in range(m):
+        for j in range(n):
+            rgb = [Ir[i,j],Ig[i,j],Ib[i,j]]
+            ycbcr = k + np.dot(T, np.transpose(rgb))
+            Iy[i,j] = np.uint8(ycbcr[0])
+            Icb[i,j] = np.uint8(ycbcr[1])
+            Icr[i,j] = np.uint8(ycbcr[2])
+
+    Iycbcr = np.zeros_like(I)
+    Iycbcr[:,:,0] = Iy
+    Iycbcr[:,:,1] = Icb
+    Iycbcr[:,:,2] = Icr
+
+    return Iycbcr
+

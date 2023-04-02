@@ -46,3 +46,41 @@ def RGB2LAB(I):
             Ilab[i,j,:] = [IL, Ia, Ib]
 
     return Ilab.astype(np.uint8)
+
+
+def RGB2LUV(I):
+    Ixyz = RGB2XYZ(I)
+    Ix = Ixyz[:,:,0]
+    Iy = Ixyz[:,:,1]
+    Iz = Ixyz[:,:,2]
+    [m,n] = np.shape(Ix)
+
+    xn = 0.95047
+    yn = 1
+    zn = 1.08883
+
+    IL = np.zeros_like(Ix)
+    Iu = np.zeros_like(Ix)
+    Iv = np.zeros_like(Ix)
+
+    for i in range(m):
+        for j in range(n):
+            Li = Iy[i,j]/yn
+            if Li > 0.008856:
+                IL[i,j] = 116 * Li**(1/3) - 16
+            else:
+                IL[i,j] = 903.3 * Li
+
+            u = 4 * Ix[i,j] / (Ix[i,j] + 15 * Iy[i,j] + 3 * Iz[i,j])
+            un = 4 * xn / (xn + 15 * yn + 3 * zn)
+            v = 9 * Iy[i,j] / (Ix[i,j] + 15 * Iy[i,j] + 3 * Iz[i,j])
+            vn = 9 * yn / (xn + 15 * yn + 3 * zn)
+            Iu[i,j] = 13 * IL[i,j] * (u - un)
+            Iv[i,j] = 13 * IL[i,j] * (v - vn)
+
+    ILuv = np.zeros_like(I)
+    ILuv[:,:,0] = IL
+    ILuv[:,:,1] = Iu
+    ILuv[:,:,2] = Iv
+
+    return ILuv

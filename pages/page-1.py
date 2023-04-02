@@ -7,6 +7,9 @@ from function.function import RGB2LAB
 from function.function import RGB2LUV
 from function.function import RGB2YCbCr
 from function.function import RGB2NTSC
+from function.function import RGB2YUV
+from function.function import RGB2HSV
+from function.function import RGB2CMY
 
 st.set_page_config(page_title="Pertemuan 11")
 st.title("Praktikum Pertemuan  11👋")
@@ -24,7 +27,7 @@ if uploaded_file is not None:
     file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
     img = cv2.imdecode(file_bytes, 1)
     
-    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["Original Image","RGB ke XYZ", "RGB ke CIElab",  "RGB ke LUV", "RGB ke YCbCr", "RGB ke NTSC"])
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9 = st.tabs(["Original Image","RGB ke XYZ", "RGB ke CIElab",  "RGB ke LUV", "RGB ke YCbCr", "RGB ke NTSC", "RGB ke YUV", "RGB ke HSV", "RGB ke CMY"])
     with tab1:
         st.markdown("<h2 style='text-align: center; color: white;'>Original Image</h2>", unsafe_allow_html=True)
         st.image(img, channels='Original Image', width=300)
@@ -58,3 +61,22 @@ if uploaded_file is not None:
         st.image(img_ntsc, channels='RGB2NTSC', width=300)
         st.markdown("<h2 style='text-align: center; color: white;'>Nilai</h2>", unsafe_allow_html=True)
         st.write(img_ntsc)
+    with tab7:
+        st.markdown("<h2 style='text-align: center; color: white;'>RGB ke YUV</h2>", unsafe_allow_html=True)
+        img_yuv = RGB2YUV(img)
+        st.image(img_yuv, channels='RGB2YUV', width=300)
+        st.markdown("<h2 style='text-align: center; color: white;'>Nilai</h2>", unsafe_allow_html=True)
+        st.write(img_yuv)
+    with tab8:
+        st.markdown("<h2 style='text-align: center; color: white;'>RGB ke HSV</h2>", unsafe_allow_html=True)
+        img_hsv = RGB2HSV(img)
+        st.image(img_hsv, channels='RGB2HSV', width=300)
+        st.markdown("<h2 style='text-align: center; color: white;'>Nilai</h2>", unsafe_allow_html=True)
+        st.write(img_hsv)
+    with tab9:
+        st.markdown("<h2 style='text-align: center; color: white;'>RGB ke CMY</h2>", unsafe_allow_html=True)
+        img_cmy = RGB2CMY(img)
+        st.image(img_cmy, channels='RGB2CMY', width=300)
+        st.markdown("<h2 style='text-align: center; color: white;'>Nilai</h2>", unsafe_allow_html=True)
+        st.write(img_cmy)
+        

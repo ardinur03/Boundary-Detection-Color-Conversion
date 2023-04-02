@@ -143,3 +143,104 @@ def RGB2NTSC(I):
 
     return IYiq
 
+def RGB2YUV(I):
+    Ir = I[:,:,0]
+    Ig = I[:,:,1]
+    Ib = I[:,:,2]
+    [m,n] = np.shape(Ir)
+
+    k = np.array([[0.299, 0.587, 0.114], [-0.147, -0.289, 0.436], [0.615, -0.515, -0.100]])
+
+    Iy = np.zeros_like(Ir)
+    Iu = np.zeros_like(Ir)
+    Iv = np.zeros_like(Ir)
+
+    for i in range(m):
+        for j in range(n):
+            rgb = np.array([Ir[i,j], Ig[i,j], Ib[i,j]])
+            yuv = np.dot(k, rgb)
+            Iy[i,j] = yuv[0]
+            Iu[i,j] = yuv[1]
+            Iv[i,j] = yuv[2]
+
+    IYuv = np.zeros_like(I)
+    IYuv[:,:,0] = Iy
+    IYuv[:,:,1] = Iu
+    IYuv[:,:,2] = Iv
+
+    return IYuv
+
+def RGB2HSV(I):
+    Ir = I[:, :, 0] / 255.0
+    Ig = I[:, :, 1] / 255.0
+    Ib = I[:, :, 2] / 255.0
+    [m, n] = np.shape(Ir)
+
+    Iv = np.zeros_like(Ir)
+    Is = np.zeros_like(Ir)
+    Ih = np.zeros_like(Ir)
+
+    for i in range(m):
+        for j in range(n):
+            r = Ir[i,j]
+            g = Ig[i,j]
+            b = Ib[i,j]
+
+            v = max(max(r,g),b)
+            vm = v - min(min(r,g),b)
+
+            if v == 0:
+                s = 0
+            else:
+                s = vm / v
+
+            if s == 0:
+                h = 0
+            elif v == r:
+                h = 60 * (g - b) / vm
+            elif v == g:
+                h = 120 + 60 * (b - r) / vm
+            elif v == b:
+                h = 240 + 60 * (r - g) / vm
+            if h < 0:
+                h = h + 360
+
+            Iv[i,j] = v
+            Is[i,j] = s
+            Ih[i,j] = h / 360
+
+    Ihsv = np.zeros_like(I)
+    Ihsv[:, :, 0] = Ih
+    Ihsv[:, :, 1] = Is
+    Ihsv[:, :, 2] = Iv
+
+    Ihsv = np.clip(Ihsv, 0, 1)  # memotong nilai piksel di bawah 0 dan di atas 1
+    Ihsv = (Ihsv - np.min(Ihsv)) / (np.max(Ihsv) - np.min(Ihsv))  # min-max scaling
+
+    return Ihsv
+
+def RGB2CMY(image):
+    # get image shape
+    height, width, channel = image.shape
+    # create new image
+    new_image = np.zeros((height, width, channel), dtype=np.uint8)
+    # convert rgb to cmy
+    for i in range(height):
+        for j in range(width):
+            new_image[i, j, 0] = 255 - image[i, j, 0]
+            new_image[i, j, 1] = 255 - image[i, j, 1]
+            new_image[i, j, 2] = 255 - image[i, j, 2]
+    return new_image
+
+def CMY2RGB(image):
+    # get image shape
+    height, width, channel = image.shape
+    # create new image
+    new_image = np.zeros((height, width, channel), dtype=np.uint8)
+    # convert cmy to rgb
+    for i in range(height):
+        for j in range(width):
+            new_image[i, j, 0] = 255 - image[i, j, 0]
+            new_image[i, j, 1] = 255 - image[i, j, 1]
+            new_image[i, j, 2] = 255 - image[i, j, 2]
+    return new_image

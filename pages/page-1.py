@@ -6,6 +6,7 @@ from function.function import RGB2XYZ
 from function.function import RGB2LAB
 from function.function import RGB2LUV
 from function.function import RGB2YCbCr
+from function.function import RGB2NTSC
 
 st.set_page_config(page_title="Pertemuan 11")
 st.title("Praktikum Pertemuan  11👋")
@@ -23,7 +24,7 @@ if uploaded_file is not None:
     file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
     img = cv2.imdecode(file_bytes, 1)
     
-    tab1, tab2, tab3, tab4, tab5 = st.tabs(["Original Image","RGB ke XYZ", "RGB ke CIElab",  "RGB ke LUV", "RGB ke YCbCr"])
+    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["Original Image","RGB ke XYZ", "RGB ke CIElab",  "RGB ke LUV", "RGB ke YCbCr", "RGB ke NTSC"])
     with tab1:
         st.markdown("<h2 style='text-align: center; color: white;'>Original Image</h2>", unsafe_allow_html=True)
         st.image(img, channels='Original Image', width=300)
@@ -51,3 +52,9 @@ if uploaded_file is not None:
         st.image(img_ycbcr, channels='RGB2YCbCr', width=300)
         st.markdown("<h2 style='text-align: center; color: white;'>Nilai</h2>", unsafe_allow_html=True)
         st.write(img_ycbcr)
+    with tab6:
+        st.markdown("<h2 style='text-align: center; color: white;'>RGB ke NTSC</h2>", unsafe_allow_html=True)
+        img_ntsc = RGB2NTSC(img)
+        st.image(img_ntsc, channels='RGB2NTSC', width=300)
+        st.markdown("<h2 style='text-align: center; color: white;'>Nilai</h2>", unsafe_allow_html=True)
+        st.write(img_ntsc)

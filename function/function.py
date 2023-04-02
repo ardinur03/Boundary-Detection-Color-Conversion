@@ -114,3 +114,32 @@ def RGB2YCbCr(I):
 
     return Iycbcr
 
+def RGB2NTSC(I):
+    Ir = I[:,:,0]
+    Ig = I[:,:,1]
+    Ib = I[:,:,2]
+    [m,n] = np.shape(Ir)
+
+    k = np.array([[0.299, 0.587, 0.114], [-0.516, -0.274, 0.322], [0.211, -0.523, -0.312]])
+
+    Iy = np.zeros((m, n), dtype=np.uint8)
+    Iu = np.zeros((m, n), dtype=np.uint8)
+    Iv = np.zeros((m, n), dtype=np.uint8)
+
+    for i in range(m):
+        for j in range(n):
+            rgb = [Ir[i,j], Ig[i,j], Ib[i,j]]
+            yiq = np.dot(k, rgb)
+            Iy[i,j] = yiq[0] / 255.0
+            Iu[i,j] = yiq[1] / 255.0
+            Iv[i,j] = yiq[2] / 255.0
+
+    IYiq = np.zeros_like(I)
+    IYiq[:,:,0] = Iy
+    IYiq[:,:,1] = Iu
+    IYiq[:,:,2] = Iv
+    IYiq = np.clip(IYiq, 0, 1)  # memotong nilai piksel di bawah 0 dan di atas 1
+    IYiq = (IYiq - np.min(IYiq)) / (np.max(IYiq) - np.min(IYiq))  # min-max scaling
+
+    return IYiq
+

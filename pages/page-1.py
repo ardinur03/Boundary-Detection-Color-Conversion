@@ -28,7 +28,7 @@ uploaded_file_1 = st.file_uploader("Choose an image", type=["jpg","jpeg","png"])
 if uploaded_file_1 is not None:
     img = np.frombuffer(uploaded_file_1.read(), np.uint8)
     img = cv2.imdecode(img, cv2.IMREAD_COLOR)
-    tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11 = st.tabs(["Original Image","RGB ke XYZ", "RGB ke CIElab",  "RGB ke LUV", "RGB ke YCbCr", "RGB ke NTSC", "RGB ke YUV", "RGB ke HSV", "RGB ke CMY", "RGB ke HSI", "RGB ke HSV"])
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10 = st.tabs(["Original Image","RGB ke XYZ", "RGB ke CIElab",  "RGB ke LUV", "RGB ke YCbCr", "RGB ke NTSC", "RGB ke YUV", "RGB ke HSV", "RGB ke CMY", "RGB ke HSI"])
     with tab1:
         st.markdown("<h2 style='text-align: center; color: white;'>Original Image</h2>", unsafe_allow_html=True)
         newImg =  cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -71,10 +71,10 @@ if uploaded_file_1 is not None:
         st.write(img_yuv)
     with tab8:
         st.markdown("<h2 style='text-align: center; color: white;'>RGB ke HSV</h2>", unsafe_allow_html=True)
-        img_hsv = RGB2HSV(img)
-        st.image(img_hsv, channels='RGB2HSV', width=300)
+        img_cmy = RGB2HSV(img)
+        st.image(img_cmy, channels='RGB2HSV', width=300)
         st.markdown("<h2 style='text-align: center; color: white;'>Nilai</h2>", unsafe_allow_html=True)
-        st.write(img_hsv)
+        st.write(img_cmy)
     with tab9:
         st.markdown("<h2 style='text-align: center; color: white;'>RGB ke CMY</h2>", unsafe_allow_html=True)
         img_cmy = RGB2CMY(img)
@@ -87,10 +87,6 @@ if uploaded_file_1 is not None:
         st.image(img_cmy, channels='RGB2HSI', width=300)
         st.markdown("<h2 style='text-align: center; color: white;'>Nilai</h2>", unsafe_allow_html=True)
         st.write(img_cmy)
-    with tab11:
-        st.markdown("<h2 style='text-align: center; color: white;'>RGB ke HSV</h2>", unsafe_allow_html=True)
-        img_cmy = RGB2HSV(img)
-        st.image(img_cmy, channels='RGB2HSV', width=300)
-        st.markdown("<h2 style='text-align: center; color: white;'>Nilai</h2>", unsafe_allow_html=True)
-        st.write(img_cmy)
         
+else:
+    st.markdown("<h2 style='text-align: center; color: white;'>Please Upload Image</h2>", unsafe_allow_html=True)

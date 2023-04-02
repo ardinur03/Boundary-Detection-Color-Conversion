@@ -227,10 +227,13 @@ def RGB2CMY(image):
     # convert rgb to cmy
     for i in range(height):
         for j in range(width):
-            new_image[i, j, 0] = 255 - image[i, j, 0]
-            new_image[i, j, 1] = 255 - image[i, j, 1]
-            new_image[i, j, 2] = 255 - image[i, j, 2]
+            r, g, b = image[i, j]
+            c = 255 - r
+            m = 255 - g
+            y = 255 - b
+            new_image[i, j] = [c, m, y]
     return new_image
+
 
 def CMY2RGB(image):
     # get image shape
